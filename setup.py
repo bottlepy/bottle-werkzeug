@@ -1,38 +1,24 @@
 #!/usr/bin/env python
+# encoding: utf-8
+from setuptools import setup
 
-import sys
-import os
-from distutils.core import setup
 
-try:
-    from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:
-    from distutils.command.build_py import build_py
-
-# This ugly hack executes the first few lines of the module file to look up some
-# common variables. We cannot just import the module because it depends on other
-# modules that might not be installed yet.
-filename = os.path.join(os.path.dirname(__file__), 'bottle_werkzeug.py')
-source = open(filename).read().split('### CUT HERE')[0]
-exec(source)
+REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name = 'bottle-werkzeug',
-    version = __version__,
-    url = 'http://bottlepy.org/docs/dev/plugin/werkzeug/',
+    version = "0.1",
+    url = 'https://github.com/bottlepy/bottle-werkzeug',
     description = 'Werkzeug integration for Bottle.',
     long_description = __doc__,
     author = 'Marcel Hellkamp',
     author_email = 'marc@gsites.de',
-    license = __license__,
+    license = "MIT",
     platforms = 'any',
     py_modules = [
         'bottle_werkzeug'
     ],
-    requires = [
-        'bottle (>=0.9)',
-        'werkzeug'
-    ],
+    install_requires = REQUIREMENTS,
     classifiers = [
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -40,7 +26,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Framework :: Bottle'
     ],
-    cmdclass = {'build_py': build_py}
 )
