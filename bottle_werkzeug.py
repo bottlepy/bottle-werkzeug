@@ -70,8 +70,8 @@ class WerkzeugPlugin(object):
             bottle.local.werkzeug_request = self.request_class(environ)
             try:
                 rv = callback(*a, **ka)
-            except werkzeug.exceptions.HTTPException, e:
-                rv = e.get_response(environ)
+            except werkzeug.exceptions.HTTPException:
+                rv = sys.exc_info()[1]
             if isinstance(rv, werkzeug.BaseResponse):
                 rv = bottle.HTTPResponse(rv.iter_encoded(), rv.status_code, rv.header_list)
             return rv
