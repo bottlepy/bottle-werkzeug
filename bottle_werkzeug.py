@@ -29,6 +29,7 @@ Example::
             raise werkzeug.exceptions.NotAcceptable()
 
 """
+import sys
 import werkzeug
 from werkzeug import *
 import bottle
