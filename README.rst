@@ -23,8 +23,8 @@ Install with one of the following commands::
 
 or download the latest version from github::
 
-    $ git clone git://github.com/bottlepy/bottle-extras.git
-    $ cd bottle-extras/werkzeug
+    $ git clone git://github.com/bottlepy/bottle-werkzeug.git
+    $ cd bottle-werkzeug
     $ python setup.py install
 
 
