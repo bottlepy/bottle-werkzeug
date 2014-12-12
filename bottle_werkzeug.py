@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This plugin adds support for :class:`werkzeug.Response`, all kinds of
 :exc:`werkzeug.exceptions` and provides a thread-local instance of
@@ -28,14 +29,6 @@ Example::
             raise werkzeug.exceptions.NotAcceptable()
 
 """
-
-
-__autor__ = "Marcel Hellkamp"
-__version__ = '0.1'
-__license__ = 'MIT'
-
-### CUT HERE (see setup.py)
-
 import werkzeug
 from werkzeug import *
 import bottle
