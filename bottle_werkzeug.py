@@ -44,7 +44,7 @@ class WerkzeugDebugger(DebuggedApplication):
             return DebuggedApplication.__call__(self, environ, start_response)
         return self.app(environ, start_response)
 
-            
+
 class WerkzeugPlugin(object):
     """ This plugin adds support for :class:`werkzeug.Response`, all kinds of
         :module:`werkzeug.exceptions` and provides a thread-local instance of
@@ -74,7 +74,7 @@ class WerkzeugPlugin(object):
             except werkzeug.exceptions.HTTPException:
                 rv = sys.exc_info()[1]
             if isinstance(rv, werkzeug.BaseResponse):
-                rv = bottle.HTTPResponse(rv.iter_encoded(), rv.status_code, rv.header_list)
+                rv = bottle.HTTPResponse(rv.iter_encoded(), rv.status_code, rv.headers)
             return rv
         return wrapper
 
@@ -83,7 +83,7 @@ class WerkzeugPlugin(object):
         ''' Return a local proxy to the current :class:`werkzeug.Request`
             instance.'''
         return werkzeug.LocalProxy(lambda: bottle.local.werkzeug_request)
-    
+
     def __getattr__(self, name):
         ''' Convenient access to werkzeug module contents. '''
         return getattr(werkzeug, name)
