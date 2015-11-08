@@ -51,10 +51,12 @@ class WerkzeugPlugin(object):
         :class:`werkzeug.Request`. It basically turns Bottle into Flask. """
 
     name = 'werkzeug'
+    api = 2
 
     def __init__(self, evalex=False, request_class=werkzeug.Request,
-                       debugger_class=WerkzeugDebugger):
+                       response_class=werkzeug.Response, debugger_class=WerkzeugDebugger):
         self.request_class = request_class
+        self.response_class = response_class
         self.debugger_class = debugger_class
         self.evalex=evalex
         self.app = None
@@ -69,6 +71,7 @@ class WerkzeugPlugin(object):
         def wrapper(*a, **ka):
             environ = bottle.request.environ
             bottle.local.werkzeug_request = self.request_class(environ)
+            bottle.local.werkzeug_response = self.response_class(environ)
             try:
                 rv = callback(*a, **ka)
             except werkzeug.exceptions.HTTPException:
@@ -83,6 +86,12 @@ class WerkzeugPlugin(object):
         ''' Return a local proxy to the current :class:`werkzeug.Request`
             instance.'''
         return werkzeug.LocalProxy(lambda: bottle.local.werkzeug_request)
+
+    @property
+    def response(self):
+        ''' Return a local proxy to the current :class:`werkzeug.Response`
+            instance.'''
+        return werkzeug.LocalProxy(lambda: bottle.local.werkzeug_response)
 
     def __getattr__(self, name):
         ''' Convenient access to werkzeug module contents. '''
