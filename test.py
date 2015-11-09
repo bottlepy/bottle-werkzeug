@@ -19,17 +19,15 @@ class WerkzeugTest(unittest.TestCase):
         self.app({'PATH_INFO':'/', 'REQUEST_METHOD':'GET',
                   'HTTP_ACCEPT_LANGUAGE': 'de, en;q=0.7'}, lambda x, y: None)
 
-
     def test_response_obj(self):
         response_plugin = self.plugin.response
-        response_source= bw.Response()
+        response_source = bw.Response()
         @self.app.get('/')
         def test():
             self.assertTrue(hasattr(response_plugin, 'headers'))
             self.assertFalse(hasattr(response_plugin, 'header_list'))
             self.assertTrue(hasattr(response_source, 'headers'))
             self.assertFalse(hasattr(response_source, 'header_list'))
-
             return repr(self.plugin.response)
         self.app({'PATH_INFO':'/', 'REQUEST_METHOD':'GET',
                   'HTTP_ACCEPT_LANGUAGE': 'de, en;q=0.7'}, lambda x, y: None)
