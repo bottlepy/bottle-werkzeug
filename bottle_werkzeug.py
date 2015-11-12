@@ -44,17 +44,19 @@ class WerkzeugDebugger(DebuggedApplication):
             return DebuggedApplication.__call__(self, environ, start_response)
         return self.app(environ, start_response)
 
-            
+
 class WerkzeugPlugin(object):
     """ This plugin adds support for :class:`werkzeug.Response`, all kinds of
         :module:`werkzeug.exceptions` and provides a thread-local instance of
         :class:`werkzeug.Request`. It basically turns Bottle into Flask. """
 
     name = 'werkzeug'
+    api = 2
 
     def __init__(self, evalex=False, request_class=werkzeug.Request,
-                       debugger_class=WerkzeugDebugger):
+                       response_class=werkzeug.Response, debugger_class=WerkzeugDebugger):
         self.request_class = request_class
+        self.response_class = response_class
         self.debugger_class = debugger_class
         self.evalex=evalex
         self.app = None
@@ -69,12 +71,13 @@ class WerkzeugPlugin(object):
         def wrapper(*a, **ka):
             environ = bottle.request.environ
             bottle.local.werkzeug_request = self.request_class(environ)
+            bottle.local.werkzeug_response = self.response_class(environ)
             try:
                 rv = callback(*a, **ka)
             except werkzeug.exceptions.HTTPException:
                 rv = sys.exc_info()[1]
             if isinstance(rv, werkzeug.BaseResponse):
-                rv = bottle.HTTPResponse(rv.iter_encoded(), rv.status_code, rv.header_list)
+                rv = bottle.HTTPResponse(rv.iter_encoded(), rv.status_code, rv.headers)
             return rv
         return wrapper
 
@@ -83,7 +86,13 @@ class WerkzeugPlugin(object):
         ''' Return a local proxy to the current :class:`werkzeug.Request`
             instance.'''
         return werkzeug.LocalProxy(lambda: bottle.local.werkzeug_request)
-    
+
+    @property
+    def response(self):
+        ''' Return a local proxy to the current :class:`werkzeug.Response`
+            instance.'''
+        return werkzeug.LocalProxy(lambda: bottle.local.werkzeug_response)
+
     def __getattr__(self, name):
         ''' Convenient access to werkzeug module contents. '''
         return getattr(werkzeug, name)
