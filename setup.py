@@ -3,11 +3,9 @@
 from setuptools import setup
 
 
-REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
-
 setup(
     name = 'bottle-werkzeug',
-    version = "0.1",
+    version = "0.1.1",
     url = 'https://github.com/bottlepy/bottle-werkzeug',
     description = 'Werkzeug integration for Bottle.',
     long_description = __doc__,
@@ -18,7 +16,10 @@ setup(
     py_modules = [
         'bottle_werkzeug'
     ],
-    install_requires = REQUIREMENTS,
+    install_requires = [
+        'bottle >= 0.9',
+        'werkzeug'
+    ],
     classifiers = [
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
